@@ -1,7 +1,9 @@
 class EnemyTank extends Tank{
     _timer;
-    _actions = ["TURN_LEFT", "TURN_RIGHT", "MOVE_FORWARD", "SHOOT", "TURN_RIGHT", "MOVE_FORWARD", "MOVE_FORWARD", "TURN_LEFT", "MOVE_FORWARD", "SHOOT",
-        "TURN_LEFT", "TURN_RIGHT", "MOVE_FORWARD", "SHOOT", "TURN_LEFT", "TURN_RIGHT", "MOVE_FORWARD", "SHOOT", "TURN_LEFT", "TURN_RIGHT", "MOVE_FORWARD", "SHOOT"];
+    _actions = ["TURN_LEFT", "TURN_RIGHT", "MOVE_FORWARD", "SHOOT", "TURN_RIGHT", 
+                "MOVE_FORWARD", "MOVE_FORWARD", "TURN_LEFT", "MOVE_FORWARD", "SHOOT",
+                "TURN_LEFT", "TURN_RIGHT", "MOVE_FORWARD", "SHOOT", "TURN_LEFT", "TURN_RIGHT", 
+                "MOVE_FORWARD", "SHOOT", "TURN_LEFT", "TURN_RIGHT", "MOVE_FORWARD", "SHOOT"];
     constructor(tnk, type, col, row, scene) {
         super(tnk, type, col, row, scene);
         //this.keyboardHandler = null;
@@ -12,7 +14,7 @@ class EnemyTank extends Tank{
     update() {
         switch (this.state) {
             case TankState.IDLE:
-                this._timer = setTimeout(this._doAction.bind(this), Math.round(Math.random() * 1000 + 100));
+                this._timer = setTimeout(this._doAction.bind(this), Math.round(Math.random() * 1000 + 100));//don't use Timeouts prefer TweenMax lib or requestAnimationFrame
                 this.state = TankState.WAIT;
             break;
             case TankState.MOVE_FORWARD:
@@ -40,7 +42,7 @@ class EnemyTank extends Tank{
             return;
         let action = this._actions[Math.round(Math.random()*this._actions.length)];
         switch (action) {
-            case "TURN_LEFT":
+            case "TURN_LEFT"://it would be better to have this actions "TURN_LEFT" somethere in config
                 this.rotateLeft();
                 this.state = TankState.IDLE;
             break;

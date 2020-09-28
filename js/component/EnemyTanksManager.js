@@ -17,7 +17,7 @@ class EnemyTanksManager {
     }
     createEnemy(i, j, blockX, blockY) {
         let color = Math.round(Math.random()*2);
-        let block = PIXI.Sprite.from(AssetsManager.getTexture(`enemy_${color}`));
+        let block = PIXI.Sprite.from(AssetsManager.getTexture(`enemy_${color}`));//this._texturePrefix = 'enemy_';add to class property
         block.anchor.x = 0.5;
         block.anchor.y = 0.5;
         block.rotation = color * Math.PI/2;
@@ -35,7 +35,7 @@ class EnemyTanksManager {
     applyDamage(col, row) {
         let enemy;
         let i = 0;
-        while (!enemy && i < this._tanks.length) {
+        while (!enemy && i < this._tanks.length) {// prefer to use for
             if (this._tanks[i]&& this._tanks[i].col == col && this._tanks[i].row == row) {
                 enemy = this._tanks[i];
             }

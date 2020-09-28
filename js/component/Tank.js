@@ -35,7 +35,7 @@ class Tank extends GameObject{
                     this.state = TankState.IDLE;
                 break;
                 case KeyState.SPACE_PRESSED:
-                    SoundManager.playSound("shoot");
+                    SoundManager.playSound("shoot");//add to soundnames config
                     this.shoot();
                 break;
             }
@@ -57,7 +57,7 @@ class Tank extends GameObject{
         this.state = TankState.MOVE_FORWARD;
         switch (this._direction) {
             case 0:
-                this.gameObject.y -= 4;
+                this.gameObject.y -= 4;//add to tank move distance config
             break;
             case 1:
                 this.gameObject.x += 4;
@@ -120,12 +120,12 @@ class Tank extends GameObject{
         this.gameObject.alpha = this._life;
     }
     get killed() {
-        return this._life <= 0.2;
+        return this._life <= 0.2;// a bit strange that having 0.2 lifes left the target is not killed, also why not to use integer instead of float?
     }
     destroy(callback) {
         if (this.state != TankState.DESTOYING) {
-            SoundManager.playSound("explode");
-            this.animationManager.addAnimation("explode", this.x, this.y, this._scene, this._destroyed.bind(this, callback));
+            SoundManager.playSound("explode");//add sound name to config
+            this.animationManager.addAnimation("explode", this.x, this.y, this._scene, this._destroyed.bind(this, callback));//add animation name to config
             this.state = TankState.DESTOYING;
         }
     }
@@ -152,7 +152,7 @@ class Tank extends GameObject{
 
     _updateDirection(value) {
         this.gameObject.rotation += value;
-        this._direction = Math.trunc(Math.abs(this.gameObject.rotation/(Math.PI/2) % 4));
+        this._direction = Math.trunc(Math.abs(this.gameObject.rotation/(Math.PI/2) % 4));//add 4 to class property
         this._stuckDirection = -1;
     }
     _reverse() {

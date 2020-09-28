@@ -18,7 +18,7 @@ class AnimationManager {
     addAnimation(id, x, y, scene, callback) {
         let animX = x;
         let animY = y;
-        const explosion = new PIXI.AnimatedSprite(AssetsManager.instance[`${id}Frames`]);
+        const explosion = new PIXI.AnimatedSprite(AssetsManager.instance[`${id}Frames`]);//Frames to config
         explosion.x =   animX;
         explosion.y =   animY;
         explosion.anchor.set(0.5);

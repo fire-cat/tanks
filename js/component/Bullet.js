@@ -11,7 +11,7 @@ class Bullet  extends GameObject{
 
         switch (this._direction) {
             case 0:
-                this.gameObject.y -= 6;
+                this.gameObject.y -= 6;//add number  to config
             break;
 
             case 1:

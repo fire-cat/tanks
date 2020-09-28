@@ -74,7 +74,7 @@ class KeyboardActions {
         };
 
         window.addEventListener(
-            "keydown", key.downHandler.bind(key), false
+            "keydown", key.downHandler.bind(key), false//it would be nice to have "keydown" in key names config
         );
         window.addEventListener(
             "keyup", key.upHandler.bind(key), false

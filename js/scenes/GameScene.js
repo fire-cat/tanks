@@ -27,7 +27,7 @@ class GameScene extends Scene {
                     break;
                     case "w1":
                         block = new PIXI.Graphics();
-                        block.beginTextureFill(AssetsManager.getTexture("small_wall_1"));
+                        block.beginTextureFill(AssetsManager.getTexture("small_wall_1"));//texture names Config
                         block.drawRect(-GameScene.cellSize/2, -GameScene.cellSize/2, GameScene.cellSize, GameScene.cellSize);
                         block.endFill();
                         objType = GameObjectTypes.DESTROYABLE_WALL;
@@ -125,7 +125,7 @@ class GameScene extends Scene {
         GameObjectManager.instance.destroy();
         this.animationManager.destroy();
         this.enemyManager.destroy();
-        ScenesManager.goToScene("gameOver");
+        ScenesManager.goToScene("gameOver");//scene names config
 
     }
 

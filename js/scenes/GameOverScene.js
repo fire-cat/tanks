@@ -7,7 +7,7 @@ class GameOverScene extends Scene {
 
     _registerEvents() {
         const _this = this;
-        this.button.mousedown = this.button.touchstart = function (data) {
+        this.button.mousedown = this.button.touchstart = function (data) {//Create a class for button ?
             if (_this.isPaused()) return;
 
             this.isdown = true;
@@ -48,13 +48,13 @@ class GameOverScene extends Scene {
         this.button.click = this.button.tap = function (data) {
             if (_this.isPaused()) return;
             _this.state = SceneStates.PAUSED;
-            ScenesManager.goToScene('menu');
+            ScenesManager.goToScene('menu');//SceneNames config
         }
     }
 
 
     show() {
-        this.button = new PIXI.Sprite(AssetsManager.getTexture("scores"));
+        this.button = new PIXI.Sprite(AssetsManager.getTexture("scores"));//texture names config
         this.button.anchor.x = 0.5;
         this.button.anchor.y = 0.5;
 

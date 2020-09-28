@@ -77,7 +77,7 @@ class MenuScene extends Scene {
     }
 
     _addTitle(title) {
-        let style = new PIXI.TextStyle({
+        let style = new PIXI.TextStyle({//Styles config
             fontFamily: 'Arial',
             fontSize: 86,
             fill: ['#ffffff'],

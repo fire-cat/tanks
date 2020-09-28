@@ -79,7 +79,7 @@ class AssetsManager {
     _createFrames(totalFrames, nameTemplate) {
         let frames = [];
         for (let i = 0; i < totalFrames; i++) {
-            frames.push(PIXI.Texture.from(nameTemplate + `${i+1}.png`));
+            frames.push(PIXI.Texture.from(nameTemplate + `${i+1}.png`));//png to property
         }
         return frames;
     }

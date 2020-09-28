@@ -7,7 +7,7 @@ class SoundManager {
     }
 
     static playSound(id, callback) {
-        let sound = PIXI.sound.Sound.from(AssetsManager.getSound(`${id}_sound`));
+        let sound = PIXI.sound.Sound.from(AssetsManager.getSound(`${id}_sound`));//_sound add to class property or config 
         sound.onComplete = ()=> {
             if (callback) {
                 callback()
