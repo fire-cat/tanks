@@ -48,18 +48,18 @@ class GameOverScene extends Scene {
         this.button.click = this.button.tap = function (data) {
             if (_this.isPaused()) return;
             _this.state = SceneStates.PAUSED;
-            ScenesManager.goToScene('menu');
+            ScenesManager.goToScene(GameScenes.MENU_SCENE);//SceneNames config
         }
     }
 
 
     show() {
-        this.button = new PIXI.Sprite(AssetsManager.getTexture("scores"));
-        this.button.anchor.x = 0.5;
-        this.button.anchor.y = 0.5;
+        this.button = new PIXI.Sprite(AssetsManager.getTexture(GameTexures.SCORES_ASSET));//texture names config
+        this.button.anchor.x = GameSettings.SPRITE_ANCHOR_X;
+        this.button.anchor.y = GameSettings.SPRITE_ANCHOR_Y;
 
-        this.button.position.x = ScenesManager.defaultWidth / 2;
-        this.button.position.y = ScenesManager.defaultHeight * 0.7;
+        this.button.position.x = ScenesManager.defaultWidth * GameSettings.BUTTON_LEFT_MULTIPLIER;
+        this.button.position.y = ScenesManager.defaultHeight * GameSettings.BUTTON_TOP_MULTIPLIER;
 
         this.button.interactive = true;
         this.button.buttonMode = true;

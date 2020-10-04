@@ -1,11 +1,11 @@
 function start() {
     let scenesManager = ScenesManager;
-    scenesManager.create(1024, 768);
+    scenesManager.create(GameSettings.FILED_WIDTH, GameSettings.FILED_HEIGHT);//game config width and height
 
-   scenesManager.createScene('game');
-   scenesManager.createScene('intro');
-   scenesManager.createScene('menu');
-   scenesManager.createScene("gameOver");
+    scenesManager.createScene(GameScenes.GAME_SCENE);
+    scenesManager.createScene(GameScenes.INTRO_SCENE);
+    scenesManager.createScene(GameScenes.MENU_SCENE);
+    scenesManager.createScene(GameScenes.RESULT_SCENE);
 
-   scenesManager.goToScene('intro');
+    scenesManager.goToScene(GameScenes.INTRO_SCENE);
 }

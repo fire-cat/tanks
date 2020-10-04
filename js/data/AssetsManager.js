@@ -17,11 +17,12 @@ class AssetsManager {
     {
         this.loadedCallback = callback;
         this.loader = new PIXI.Loader();
-        this.loader.add('button','assets/button.png')
+        for (let i = 0 ; i < GameAssets.ASSETS.length; i++) {
+            this.loader.add( GameAssets.ASSETS[i].id,  GameAssets.ASSETS[i].path);
+        }
+        this.loader/*add('button','assets/button.png')
             .add('scores','assets/scores.png')
             .add('appear', 'assets/animation/appear.png')
-            //.add('explode', 'assets/animation/explode.png')
-            //.add('explode_small', 'assets/animation/explode_small.png')
             .add('explode_small_json', 'assets/animation/explode_small.json')
             .add('eagle','assets/board/eagle.png')
             .add('leaves','assets/board/leaves.png')
@@ -47,10 +48,10 @@ class AssetsManager {
             .add('lose_sound', 'assets/sounds/lose.wav')
             .add('win_sound', 'assets/sounds/win.wav')
             .add('explode_sound', 'assets/sounds/explode.wav')
-            .add('hit_sound', 'assets/sounds/hit.wav')
+            .add('hit_sound', 'assets/sounds/hit.wav')*/
 
             .load(this._handleLoadComplete.bind(this))
-            .on("progress", this._handleLoadProgress.bind(this, this.loader));
+            .on(GameEvents.PROGRESS, this._handleLoadProgress.bind(this, this.loader));
     }
 
     static getSound(id) {
@@ -67,19 +68,15 @@ class AssetsManager {
 
     _handleLoadComplete(loader) {
         AssetsManager.instance.levels = loader.resources.levels.data;
-        this.explodeFrames = this._createFrames(16, "explode");
+        this.explodeFrames = this._createFrames(16, GameTexures.EXPLODE_ANIMATION);
         this.smallExplodeFrames = this._createFrames(8, "");
-/*        for (let i = 0; i < 16; i++) {
-            this.explodeFrames.push(PIXI.Texture.from(`explode${i+1}.png`));
-        }*/
-
         this.loadedCallback();
     }
 
     _createFrames(totalFrames, nameTemplate) {
         let frames = [];
         for (let i = 0; i < totalFrames; i++) {
-            frames.push(PIXI.Texture.from(nameTemplate + `${i+1}.png`));
+            frames.push(PIXI.Texture.from(nameTemplate + `${i+1}` + GameAssets.ASSETS_EXT));//png to property
         }
         return frames;
     }

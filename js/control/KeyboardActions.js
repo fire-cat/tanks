@@ -8,11 +8,11 @@ class KeyboardActions {
     keyHandler;
     constructor(props) {
 
-        this.left = this.keyboard(37);
-        this.up = this.keyboard(38);
-        this.right = this.keyboard(39);
-        this.down = this.keyboard(40);
-        this.space = this.keyboard(32);
+        this.left = this.keyboard(GameControls.KEY_LEFT);
+        this.up = this.keyboard(GameControls.KEY_UP);
+        this.right = this.keyboard(GameControls.KEY_RIGHT);
+        this.down = this.keyboard(GameControls.KEY_DOWN);
+        this.space = this.keyboard(GameControls.KEY_SPACE);
 
         this.left.press = () => {
             this.keyHandler(KeyState.LEFT_PRESSED);
@@ -42,7 +42,7 @@ class KeyboardActions {
         };
 
         this.space.release = () => {
-            console.log("this.space.release");
+            //console.log("this.space.release");
         };
     };
 
@@ -74,10 +74,10 @@ class KeyboardActions {
         };
 
         window.addEventListener(
-            "keydown", key.downHandler.bind(key), false
+            GameEvents.KEYDOWN, key.downHandler.bind(key), false//it would be nice to have "keydown" in key names config
         );
         window.addEventListener(
-            "keyup", key.upHandler.bind(key), false
+            GameEvents.KEYUP, key.upHandler.bind(key), false
         );
         return key;
     }

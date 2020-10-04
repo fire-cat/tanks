@@ -14,7 +14,7 @@ class MenuScene extends Scene {
             if (_this.isPaused()) return;
 
             this.isdown = true;
-            this.scale.x = this.scale.y = 1;
+            this.scale.x = this.scale.y = GameButtonEffects.NORMAL_EFFECT;
         };
 
         this.button.mouseup = this.button.touchend = function (data) {
@@ -23,10 +23,10 @@ class MenuScene extends Scene {
             this.isdown = false;
 
            if (this.isOver) {
-               this.scale.x = this.scale.y = 1.2;
+               this.scale.x = this.scale.y = GameButtonEffects.OVER_EFFECT;
             }
             else {
-               this.scale.x = this.scale.y = 1;
+               this.scale.x = this.scale.y = GameButtonEffects.NORMAL_EFFECT;
             }
         };
 
@@ -37,7 +37,7 @@ class MenuScene extends Scene {
 
             if (this.isdown) return;
 
-            this.scale.x = this.scale.y = 1.2;
+            this.scale.x = this.scale.y = GameButtonEffects.OVER_EFFECT;
         };
 
         this.button.mouseout = function (data) {
@@ -45,24 +45,24 @@ class MenuScene extends Scene {
 
             this.isOver = false;
             if (this.isdown) return;
-            this.scale.x = this.scale.y = 1;
+            this.scale.x = this.scale.y = GameButtonEffects.NORMAL_EFFECT;
         };
 
         this.button.click = this.button.tap = function (data) {
             if (_this.isPaused()) return;
             _this.state = SceneStates.PAUSED;
-            ScenesManager.goToScene('game');
+            ScenesManager.goToScene(GameScenes.GAME_SCENE);
         }
     }
 
 
     show() {
-        this.button = new PIXI.Sprite(AssetsManager.getTexture("button"));
-        this.button.anchor.x = 0.5;
-        this.button.anchor.y = 0.5;
+        this.button = new PIXI.Sprite(AssetsManager.getTexture(GameTexures.BUTTON));
+        this.button.anchor.x = GameSettings.SPRITE_ANCHOR_X;
+        this.button.anchor.y = GameSettings.SPRITE_ANCHOR_Y;
 
-        this.button.position.x = ScenesManager.defaultWidth / 2;
-        this.button.position.y = ScenesManager.defaultHeight * 0.7;
+        this.button.position.x = ScenesManager.defaultWidth * GameSettings.BUTTON_LEFT_MULTIPLIER;
+        this.button.position.y = ScenesManager.defaultHeight * GameSettings.BUTTON_TOP_MULTIPLIER;
 
         this.button.interactive = true;
         this.button.buttonMode = true;
@@ -73,24 +73,17 @@ class MenuScene extends Scene {
 
         this.interactive = true;
 
-        this._addTitle("Tank Game");
+        this._addTitle(GameSettings.GAME_TITLE);
     }
 
     _addTitle(title) {
-        let style = new PIXI.TextStyle({
-            fontFamily: 'Arial',
-            fontSize: 86,
-            fill: ['#ffffff'],
-            strokeThickness: 5,
-            dropShadow: true,
-            wordWrapWidth: 440,
-        });
+        let style = new PIXI.TextStyle(GameStyles.TITLE_STYLE);
 
         let basicText = new PIXI.Text(title, style);
-        basicText.anchor.x = 0.5;
-        basicText.anchor.y = 0.5;
-        basicText.x = ScenesManager.defaultWidth / 2;
-        basicText.y = ScenesManager.defaultHeight * 0.3;
+        basicText.anchor.x = GameSettings.SPRITE_ANCHOR_X;
+        basicText.anchor.y = GameSettings.SPRITE_ANCHOR_Y;
+        basicText.x = ScenesManager.defaultWidth * GameStyles.TITLE_LEFT_MULTIPLIER;
+        basicText.y = ScenesManager.defaultHeight * GameStyles.TITLE_TOP_MULTIPLIER;
 
        this.addChild(basicText);
        this.state = SceneStates.READY;

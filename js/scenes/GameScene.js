@@ -13,6 +13,7 @@ class GameScene extends Scene {
     }
 
     show() {
+        this.tank = null;
         let level = AssetsManager.getLevel();
 
         let blockY = 0;
@@ -22,51 +23,63 @@ class GameScene extends Scene {
                 let block;
                 let objType;
                 switch (level[i][j]) {
-                    case "et":
-                        this.enemyManager.createEnemy(i, j, blockX, blockY);
+                    case GameItems.ENEMY:
+                        if (this.enemyManager._tanks.length < GameSettings.NUMBER_OF_ENEMIES) {
+                            let color = Math.round(Math.random()*(GameSettings.ENEMY_COLORS-1));
+                            block = PIXI.Sprite.from(AssetsManager.getTexture(GameTexures.ENEMY_PREFIX + `${color}`));
+                            block.rotation = color * Math.PI/2;
+                            block.zIndex = GameSettings.TANK_ZINDEX;
+                            this.enemyManager.createEnemy(i, j, blockX, blockY, block);
+                            //objType = GameObjectTypes.ENEMY_TANK;
+                        }
                     break;
-                    case "w1":
+                    case GameItems.DESTROYABLE_WALL:
                         block = new PIXI.Graphics();
-                        block.beginTextureFill(AssetsManager.getTexture("small_wall_1"));
-                        block.drawRect(-GameScene.cellSize/2, -GameScene.cellSize/2, GameScene.cellSize, GameScene.cellSize);
+                        block.beginTextureFill(AssetsManager.getTexture(GameTexures.SMALL_WALL_1));//texture names Config
+                        block.drawRect(-GameScene.cellSize/2, -GameScene.cellSize/2, GameScene.cellSize,
+                            GameScene.cellSize);
                         block.endFill();
                         objType = GameObjectTypes.DESTROYABLE_WALL;
                     break;
 
-                    case "wt":
-                        block = PIXI.Sprite.from(AssetsManager.getTexture("water"));
+                    case GameItems.WATER:
+                        block = PIXI.Sprite.from(AssetsManager.getTexture(GameTexures.WATER));
                         objType = GameObjectTypes.WATER;
                         break;
 
-                    case "w":
-                        block = PIXI.Sprite.from(AssetsManager.getTexture("wall"));
+                    case GameItems.WALL:
+                        block = PIXI.Sprite.from(AssetsManager.getTexture(GameTexures.WALL));
                         objType = GameObjectTypes.WALL;
                         break;
 
-                    case "l":
-                        block = PIXI.Sprite.from(AssetsManager.getTexture("leaves"));
+                    case GameItems.LEAVES:
+                        block = PIXI.Sprite.from(AssetsManager.getTexture(GameTexures.LEAVES));
                         objType = GameObjectTypes.LEAVES;
                         break;
 
-                    case "e":
-                        block = PIXI.Sprite.from(AssetsManager.getTexture("eagle"));
+                    case GameItems.EAGLE:
+                        block = PIXI.Sprite.from(AssetsManager.getTexture(GameTexures.EAGLE));
                         objType = GameObjectTypes.EAGLE;
                         break;
 
-                    case "t":
-                        block = PIXI.Sprite.from(AssetsManager.getTexture("tank"));
+                    case GameItems.PLAYER_TANK:
+                       // break;
+                        block = PIXI.Sprite.from(AssetsManager.getTexture(GameTexures.TANK));
                         block.rotation = Math.PI/2;
                         this.tank = new Tank(block, GameObjectTypes.TANK, i, j, this);
-                        objType = GameObjectTypes.TANK;
-                        block.zIndex = 1000;
+                        this.gameObjects.addDynamicObject(this.tank);
+                        //objType = GameObjectTypes.TANK;
+                        block.zIndex = GameSettings.TANK_ZINDEX;
                     break;
                 }
                 if (block) {
                     this.addChild(block);
-                    this.gameObjects.addObject(block, objType, i, j, this);
+                    if (objType) {
+                        this.gameObjects.addStaticObject(block, objType, i, j, this);
+                    }
                    if (block.anchor) {
-                        block.anchor.x = 0.5;
-                        block.anchor.y = 0.5;
+                        block.anchor.x = GameSettings.SPRITE_ANCHOR_X;
+                        block.anchor.y = GameSettings.SPRITE_ANCHOR_Y;
                     }
                     block.x = blockX + GameScene.cellSize/2;
                     block.y = blockY + GameScene.cellSize/2;
@@ -85,16 +98,21 @@ class GameScene extends Scene {
     }
 
     _checkTankObjectCollision() {
+        if (!this.tank) {
+            return;
+        }
         let checkPosition = this.tank.getCollisionPosition();
         let collisionObject = this.gameObjects.getObject(checkPosition.x, checkPosition.y);
-        if (collisionObject && this._checkCollision(this.tank, collisionObject )) {
-            console.log(collisionObject.type);
+        if (collisionObject && Utils.checkCollision(this.tank, collisionObject )) {
+            //console.log("Colligin with: " + "(" + collisionObject.col + ", " + collisionObject.row + ")");
             switch (collisionObject.type) {
                 case GameObjectTypes.WALL:
                 case GameObjectTypes.DESTROYABLE_WALL:
                     this.tank.state = TankState.STUCK;
                 break;
             }
+        } else {
+            this.tank.resetStuckDirection();
         }
     }
 
@@ -104,6 +122,9 @@ class GameScene extends Scene {
     }
 
     _checkTankDamage() {
+        if (!this.tank) {
+            return;
+        }
         let checkPosition = this.tank.getPosition();
         let collisionObject = this.gameObjects.getObject(checkPosition.x, checkPosition.y);
 
@@ -125,23 +146,13 @@ class GameScene extends Scene {
         GameObjectManager.instance.destroy();
         this.animationManager.destroy();
         this.enemyManager.destroy();
-        ScenesManager.goToScene("gameOver");
-
-    }
-
-    _checkCollision(object1, object2) {
-        try {
-            const bounds1 = object1.getBounds();
-            const bounds2 = object2.getBounds();
-
-            return bounds1.x < bounds2.x + bounds2.width
-                && bounds1.x + bounds1.width > bounds2.x
-                && bounds1.y < bounds2.y + bounds2.height
-                && bounds1.y + bounds1.height > bounds2.y;
-        } catch {
-            return false;
+        if (this.tank) {
+            this.tank.destroy();
         }
+        ScenesManager.goToScene(GameScenes.RESULT_SCENE);//scene names config
+
     }
+
     _handleBullets() {
         let bulletsCollision = [];
         this.gameObjects.bullets.forEach((item, i) => {
@@ -149,14 +160,15 @@ class GameScene extends Scene {
             let collisionObject = GameObjectManager.instance.getObject(checkPosition.x, checkPosition.y);
             function destroyBullet() {
                 GameObjectManager.instance.bullets.splice(i, 1);
+                //console.log("destoy in: " + "(" + item.col + ", " + item.row + ")");
                 item.destroy();
             }
             if (collisionObject) {
-
                 switch (collisionObject.type) {
                     case GameObjectTypes.EAGLE:
-                        SoundManager.playSound("explode");
-                        this.animationManager.addAnimation("explode", item.x, item.y, this, this.gameOver.bind(this));
+                        SoundManager.playSound(GameSounds.SOUND_EXPLODE);
+                        this.animationManager.addAnimation(GameAnimations.EXPLODE_ANIMATION, item.x, item.y, this,
+                            this.gameOver.bind(this));
                         destroyBullet();
                         this.state = SceneStates.GAME_WON;
                     break;
@@ -171,7 +183,9 @@ class GameScene extends Scene {
                     case GameObjectTypes.ENEMY_TANK:
                         if (item.type == GameObjectTypes.BULLET) {
                             destroyBullet();
-                            let enemyTank = this.enemyManager.applyDamage(collisionObject.col, collisionObject.row);
+                            //collisionObject.applyDamage();
+                                //applet enemyTank =
+                            this.enemyManager.applyDamage(collisionObject);
                         }
                     break;
                     case GameObjectTypes.TANK:
@@ -192,9 +206,12 @@ class GameScene extends Scene {
 
         if (bulletsCollision.length >= 1) {
             bulletsCollision.forEach(function (item) {
-                AnimationManager.instance.addAnimation("smallExplode", item.x, item.y, item.scene, GameObjectManager.instance.removeItem.bind(GameObjectManager.instance, item));
+                item.deactivate();
+                AnimationManager.instance.addAnimation(GameAnimations.SMALL_EXPLODE_ANIMATION, item.x, item.y,
+                    item.scene, GameObjectManager.instance.removeItem.bind(GameObjectManager.instance, item));
             })
         }
+        this._checkTankObjectCollision();
     }
 
      update() {
@@ -213,18 +230,21 @@ class GameScene extends Scene {
              case SceneStates.IDLE:
                  this._checkTankObjectCollision();
                  this._checkTankDamage();
-                 this.tank.update();
+                 if (this.tank) {
+                     this.tank.update();
+                 }
+
              break;
              case SceneStates.GAME_OVER:
                  return;
              break;
              case SceneStates.GAME_LOSE:
-                 SoundManager.playSound("lose", () => {
+                 SoundManager.playSound(GameSounds.SOUND_LOSE, () => {
                      this.state = SceneStates.GAME_OVER;
                  });
              break;
              case SceneStates.GAME_WON:
-                 SoundManager.playSound("win", () => {
+                 SoundManager.playSound(GameSounds.SOUND_WIN, () => {
                      this.state = SceneStates.GAME_OVER;
                  });
              break;

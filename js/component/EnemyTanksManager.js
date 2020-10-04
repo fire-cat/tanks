@@ -15,31 +15,33 @@ class EnemyTanksManager {
         this._tanks = [];
         this._state = SceneStates.NONE;
     }
-    createEnemy(i, j, blockX, blockY) {
-        let color = Math.round(Math.random()*2);
-        let block = PIXI.Sprite.from(AssetsManager.getTexture(`enemy_${color}`));
-        block.anchor.x = 0.5;
-        block.anchor.y = 0.5;
-        block.rotation = color * Math.PI/2;
-        block.zIndex = 1000;
+    createEnemy(i, j, blockX, blockY, block) {
+        //let color = Math.round(Math.random()*2);
+        //let block = PIXI.Sprite.from(AssetsManager.getTexture(GameTexures.ENEMY_PREFIX + `${color}`));//this._texturePrefix = 'enemy_';add to class property
+        //block.anchor.x = GameSettings.SPRITE_ANCHOR_X;
+        //block.anchor.y = GameSettings.SPRITE_ANCHOR_Y;
+       // block.rotation = color * Math.PI/2;
+        //block.zIndex = GameSettings.TANK_ZINDEX;
 
-        this._scene.addChild(block);
-        block.x = blockX + GameScene.cellSize/2;
-        block.y = blockY + GameScene.cellSize/2;
         let enemy = new EnemyTank(block, GameObjectTypes.ENEMY_TANK, i, j, this._scene);
-        GameObjectManager.instance.addObject(block, GameObjectTypes.ENEMY_TANK, i, j, this._scene);
+
+/*        this._scene.addChild(block);
+        block.x = blockX + GameScene.cellSize/2;
+        block.y = blockY + GameScene.cellSize/2;*/
+
+        GameObjectManager.instance.addDynamicObject(enemy);
         this._tanks.push(enemy);
         this._state = SceneStates.READY;
 
     }
-    applyDamage(col, row) {
+    applyDamage(gameObject) {
         let enemy;
         let i = 0;
-        while (!enemy && i < this._tanks.length) {
-            if (this._tanks[i]&& this._tanks[i].col == col && this._tanks[i].row == row) {
+        for (i = 0; i < this._tanks.length; i++) {
+            if (this._tanks[i].gameObject == gameObject.gameObject) {
                 enemy = this._tanks[i];
+                break;
             }
-            i++;
         }
         if (enemy) {
             enemy.applyDamage();
@@ -50,15 +52,29 @@ class EnemyTanksManager {
         }
 
     }
+
+/*    _checkTankDamage(tank) {
+        let checkPosition = tank.getPosition();
+        let collisionObject = this.gameObjects.getObject(checkPosition.x, checkPosition.y);
+
+        if (collisionObject) {
+            switch (collisionObject.type) {
+                case GameObjectTypes.WATER:
+                    tank.destroy();
+                    break;
+            }
+        }
+    }*/
     update() {
         switch (this._state) {
             case SceneStates.READY:
-                //this._tanks[0].update();
                 for (let i = 0; i < this._tanks.length; i++) {
                     this._tanks[i].update();
                 }
             break;
         }
+
+
 
     }
 }

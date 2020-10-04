@@ -12,7 +12,7 @@ class IntroScene extends Scene {
 
     show()  {
         let loader = new PIXI.Loader();
-        loader.add('preloaderBg',"assets/preloader/loader-bg.png").add("loaderBar", "assets/preloader/loader-bar.png");
+        loader.add(GameAssets.PRELOADER,GameAssets.PRELOADER_PATH).add(GameAssets.LOADER_BAR, GameAssets.LOADER_BAR_PATH);
         loader.once('complete', this.onPreloaderLoaded.bind(this, loader.resources));
         loader.load();
     }
@@ -20,8 +20,11 @@ class IntroScene extends Scene {
     onPreloaderLoaded(res, loader) {
         this.bgPreloader = new PIXI.Sprite(res.preloaderBg.texture);
         this.bgPreloaderBar = new PIXI.Sprite(res.loaderBar.texture);
-        this._initPreloader(this.bgPreloader, {ax:0.5, ay:0.5, x: ScenesManager.defaultWidth / 2, y : ScenesManager.defaultHeight /2});
-        this._initPreloader(this.bgPreloaderBar, {ax:0, ay:0.5, x: (ScenesManager.defaultWidth - this.bgPreloaderBar.width)/ 2, y : ScenesManager.defaultHeight /2});
+        this._initPreloader(this.bgPreloader, {ax:GameSettings.SPRITE_ANCHOR_X, ay: GameSettings.SPRITE_ANCHOR_Y,
+            x: ScenesManager.defaultWidth / 2, y : ScenesManager.defaultHeight /2});
+        this._initPreloader(this.bgPreloaderBar, {ax:0, ay:GameSettings.SPRITE_ANCHOR_Y,
+            x: (ScenesManager.defaultWidth - this.bgPreloaderBar.width)/ 2,
+            y : ScenesManager.defaultHeight /2});
         this.bgPreloaderBar.scale.x = 0.3;
         this.state = SceneStates.INIT;
     }
@@ -54,7 +57,7 @@ class IntroScene extends Scene {
             break;
             case SceneStates.READY:
                 this.state = SceneStates.PAUSED;
-                ScenesManager.goToScene('menu');
+                ScenesManager.goToScene(GameScenes.MENU_SCENE);
             break;
         }
     }

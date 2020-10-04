@@ -11,19 +11,19 @@ class Bullet  extends GameObject{
 
         switch (this._direction) {
             case 0:
-                this.gameObject.y -= 6;
+                this.gameObject.y -= GameSettings.BULLET_VELOCITY_DELTA;//add number  to config
             break;
 
             case 1:
-                this.gameObject.x += 6;
+                this.gameObject.x += GameSettings.BULLET_VELOCITY_DELTA;
             break;
 
             case 2:
-                this.gameObject.y += 6;
+                this.gameObject.y += GameSettings.BULLET_VELOCITY_DELTA;
             break;
 
             case 3:
-                this.gameObject.x -= 6;
+                this.gameObject.x -= GameSettings.BULLET_VELOCITY_DELTA;
             break;
         }
         this.row = Math.trunc(this.gameObject.x / GameScene.cellSize);

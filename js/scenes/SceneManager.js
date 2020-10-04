@@ -38,23 +38,23 @@ class ScenesManager extends PIXI.Application{
         if (ScenesManager.scenes[id]) return undefined;
         let scene;
         switch (id) {
-            case "game":
+            case GameScenes.GAME_SCENE:
             {
                 scene = new GameScene();
             }
             break;
-            case "intro":
+            case GameScenes.INTRO_SCENE:
             {
                 scene = new IntroScene();
             }
             break;
-            case "menu":
+            case GameScenes.MENU_SCENE:
             {
                 scene = new MenuScene();
             }
             break;
 
-            case "gameOver":
+            case GameScenes.RESULT_SCENE:
             {
                 scene = new GameOverScene();
             }

@@ -4,6 +4,7 @@ class GameObject {
     gameObject;
     col;
     row;
+    active;
 
     constructor(item, type, col, row, scene) {
         this._scene = scene;
@@ -11,6 +12,7 @@ class GameObject {
         this.type = type;
         this.col = col;
         this.row = row;
+        this.active = true;
     }
     getBounds() {
         return this.gameObject.getBounds();
@@ -39,10 +41,14 @@ class GameObject {
     }
 
     destroy() {
-        this.gameObject.destroy();
+        if (this.gameObject)
+            this.gameObject.destroy();
     }
     update() {
 
+    }
+    deactivate() {
+        this.active = false;
     }
 
 }
